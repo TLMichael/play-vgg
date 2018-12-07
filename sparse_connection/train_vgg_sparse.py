@@ -17,12 +17,12 @@ import sys
 home = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(home)
 
-from models.vgg_me import VGG_Me
+from models.vgg_sparse import VGG_Sparse
 from utils import *
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
-parser.add_argument('--l1_lambda', default=1.0, type=float, help='l1 regularization')
+parser.add_argument('--drop_prob', default=0.8, type=float, help='l1 regularization')
 args = parser.parse_args()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -53,8 +53,8 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 
 # Model
 print('==> Building model..')
-model_name = 'VGG_Me_L1'
-net = VGG_Me()
+model_name = 'VGG_Me_Sparse_0.8'
+net = VGG_Sparse(args.drop_prob)
 
 writer = SummaryWriter(comment=model_name)
 dummy_input = torch.rand(13, 3, 32, 32)
@@ -77,14 +77,6 @@ def train(epoch):
         optimizer.zero_grad()
         outputs = net(inputs)
         loss = criterion(outputs, targets)
-
-        # add l1 regularization
-        for name, param in net.named_parameters():
-            if 'classifier.0.weight' in name:
-                L1_1 = torch.tensor(param, requires_grad=True)
-                L1_2 = torch.norm(L1_1, 1)
-                L1_3 = args.l1_lambda * L1_2
-                loss = loss + L1_3
 
         loss.backward()
         optimizer.step()
@@ -155,7 +147,7 @@ def analyze():
 
     writer.add_text(model_name, 'Total params: {}'.format(total_params))
     writer.add_text(model_name, 'Classifier params: {}'.format(classifier_params))
-    writer.add_text(model_name, 'L1 lambda: {}'.format(args.l1_lambda))
+    writer.add_text(model_name, 'Dropout prob: {}'.format(args.drop_prob))
     writer.add_text(model_name, 'Sparsitys: {}'.format(ss), global_step=start_epoch+200)
 
     for name, param in net.named_parameters():

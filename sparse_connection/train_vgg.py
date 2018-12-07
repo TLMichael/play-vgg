@@ -145,7 +145,7 @@ def analyze():
 
     writer.add_text(model_name, 'Total params: {}'.format(total_params))
     writer.add_text(model_name, 'Classifier params: {}'.format(classifier_params))
-    writer.add_text(model_name, 'L1 lambda: {}'.format('NaN'))
+    writer.add_text(model_name, 'Dropout prob: {}'.format('NaN'))
     writer.add_text(model_name, 'Sparsitys: {}'.format(ss), global_step=start_epoch+200)
 
     for name, param in net.named_parameters():

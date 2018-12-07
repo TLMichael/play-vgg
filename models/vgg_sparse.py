@@ -7,14 +7,17 @@ cfg = [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 'Redu
 
 
 class VGG_Sparse(nn.Module):
-    def __init__(self):
+    def __init__(self, p=0.5):
         super(VGG_Sparse, self).__init__()
         self.features = self._make_layers()
         self.classifier = nn.Sequential(nn.Linear(512, 1024),
+                                        nn.Dropout(p),
                                         nn.ReLU(),
                                         nn.Linear(1024, 1024),
+                                        nn.Dropout(p),
                                         nn.ReLU(),
                                         nn.Linear(1024, 256),
+                                        nn.Dropout(p),
                                         nn.ReLU(),
                                         nn.Linear(256, 10))
         # self.classifier = nn.Linear(2048, 10)
