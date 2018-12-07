@@ -18,7 +18,7 @@ Analysis of convolutional neural network
 ## Linear Convolution
 
 |Name|Sparsitys|Total params|Classifier params|accurancy|
-|:---|:---:|:---:|:---:|:---:|:---:|
+|:---|:---:|:---:|:---:|:---:|
 |VGG_Me|2.48e-05, 9.77e-05|9225290|535562|91.66|
 |VGG_Conv_Linear|9.54e-06, 9.77e-05|9225290|535562|85.92|
 |VGG_Linear|4.58e-05, 0.00e+00|9225290|535562|87.22|
