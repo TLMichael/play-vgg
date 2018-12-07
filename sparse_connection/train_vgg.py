@@ -55,7 +55,7 @@ print('==> Building model..')
 model_name = 'VGG_Me'
 net = VGG_Me()
 
-writer = SummaryWriter(log_dir=os.path.join(os.path.dirname(__file__), 'runs'), comment=model_name)
+writer = SummaryWriter(comment=model_name)
 dummy_input = torch.rand(13, 3, 32, 32)
 writer.add_graph(net, (dummy_input,))
 
@@ -136,10 +136,20 @@ def analyze():
     Ws = net.classifier.state_dict().items()
     sparsitys = compute_sparsitys(Ws)
 
-    writer.add_text(model_name, 'Total params: {}'.format(compute_total_param_number(net)))
-    writer.add_text(model_name, 'Classifier params: {}'.format(compute_param_number(net)))
+    total_params = compute_total_param_number(net)
+    classifier_params = compute_param_number(net)
+    ss = ', '.join('{:0.2e}'.format(i) for i in sparsitys)
+    print('Total params: {}'.format(total_params))
+    print('Classifier params: {}'.format(classifier_params))
+    print('Sparsitys: {}'.format(ss))
+
+    writer.add_text(model_name, 'Total params: {}'.format(total_params))
+    writer.add_text(model_name, 'Classifier params: {}'.format(classifier_params))
     writer.add_text(model_name, 'L1 lambda: {}'.format('NaN'))
-    writer.add_text(model_name, 'Sparsitys: {}'.format(', '.join('{:0.2e}'.format(i) for i in sparsitys)), global_step=start_epoch+200)
+    writer.add_text(model_name, 'Sparsitys: {}'.format(ss), global_step=start_epoch+200)
+
+    for name, param in net.named_parameters():
+        writer.add_histogram(name, param.clone().cpu().data.numpy(), start_epoch+200)
 
 
 

@@ -13,4 +13,10 @@ Analysis of convolutional neural network
 
 ### VGG_Me
 
+|Name|L1 lambda|Sparsitys|Total params|Classifier params|accurancy|
+|:---|:---:|:---:|:---:|:---:|:---:|
+|VGG_Me|NaN|||||
+|VGG_Me_L1|1.0|||||
+
+
 ### VGG_Sparse
